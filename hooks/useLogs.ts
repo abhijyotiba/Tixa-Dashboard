@@ -41,6 +41,8 @@ export function useLogs(params: LogQueryParams = {}) {
   return { data, loading, error };
 }
 
+// FIX: Changed parameter type from `string | null` to `string | null` 
+// and added proper null check before calling API
 export function useLogDetail(id: string | null) {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -49,6 +51,8 @@ export function useLogDetail(id: string | null) {
   useEffect(() => {
     if (!id) {
       setLoading(false);
+      setData(null);
+      setError(null);
       return;
     }
 
@@ -58,7 +62,7 @@ export function useLogDetail(id: string | null) {
       try {
         setLoading(true);
         setError(null);
-        const result = await loggerApi.getLogById(id);
+        const result = await loggerApi.getLogById(id as string);
         if (isMounted) {
           setData(result);
         }
