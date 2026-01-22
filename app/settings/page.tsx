@@ -33,7 +33,9 @@ export default function SettingsPage() {
       const res = await fetch('/api/proxy/auth/keys');
       if (res.ok) {
         const data = await res.json();
-        setKeys(data);
+        // Backend might return { data: [...] } or just [...]
+        const keysArray = Array.isArray(data) ? data : (data.data || data.keys || []);
+        setKeys(keysArray);
       } else {
         const errorData = await res.json();
         setError(errorData.error || 'Failed to fetch API keys');
@@ -205,6 +207,13 @@ export default function SettingsPage() {
                   <Key className="mx-auto h-12 w-12 text-gray-400 mb-3" />
                   <p className="text-gray-500 text-sm">
                     No active keys found. Create one above to get started.
+                  </p>
+                </div>
+              ) : !Array.isArray(keys) ? (
+                <div className="px-6 py-8 text-center">
+                  <AlertCircle className="mx-auto h-12 w-12 text-red-400 mb-3" />
+                  <p className="text-red-500 text-sm">
+                    Invalid data format received from server
                   </p>
                 </div>
               ) : (
