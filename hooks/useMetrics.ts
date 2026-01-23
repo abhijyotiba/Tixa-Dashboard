@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { loggerApi } from '@/services/loggerApi';
 import { MetricsOverview, CategoryMetrics } from '@/types/logs';
 
-export function useMetrics() {
+export function useMetrics(period: number = 7) {
   const [data, setData] = useState<MetricsOverview | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -16,7 +16,14 @@ export function useMetrics() {
       try {
         setLoading(true);
         setError(null);
-        const result = await loggerApi.getMetricsOverview();
+        const result = await loggerApi.getMetricsOverview(period);
+        
+        // If time_series is empty, try to fetch it separately
+        if (isMounted && (!result.time_series || result.time_series.length === 0)) {
+          const timeSeries = await loggerApi.getTimeSeries(period);
+          result.time_series = timeSeries;
+        }
+        
         if (isMounted) {
           setData(result);
         }
@@ -36,7 +43,7 @@ export function useMetrics() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [period]);
 
   return { data, loading, error };
 }

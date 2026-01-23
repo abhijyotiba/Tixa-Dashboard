@@ -92,8 +92,9 @@ export default function LogDetailPage() {
   }
 
   // Main render
+  // Note: overall_confidence is already in 0-100 scale
   const confidenceScore = log.metrics?.overall_confidence 
-    ? (log.metrics.overall_confidence * 100).toFixed(1) 
+    ? log.metrics.overall_confidence.toFixed(1) 
     : '0.0';
 
   return (

@@ -37,12 +37,75 @@ class LoggerAPI {
 
   /**
    * Get analytics overview metrics
+   * @param period - Number of days to fetch metrics for (1, 7, 30)
    */
-  async getMetricsOverview(): Promise<MetricsOverview> {
-    const response = await this.client.get('/metrics/overview');
+  async getMetricsOverview(period: number = 7): Promise<MetricsOverview> {
+    const response = await this.client.get('/metrics/overview', {
+      params: { period_days: period }
+    });
     // Backend returns: { data: { ...metrics }, client_id: "..." }
     // Frontend expects: { ...metrics }
-    return response.data.data;
+    const data = response.data.data;
+    
+    // Handle different possible time_series field names from backend
+    const timeSeries = data.time_series || data.timeSeries || data.daily_counts || data.dailyCounts || [];
+    
+    return {
+      ...data,
+      time_series: timeSeries
+    };
+  }
+
+  /**
+   * Get time series data for tickets processed
+   * @param period - Number of days to fetch (1, 7, 30)
+   */
+  async getTimeSeries(period: number = 7): Promise<{ date: string; count: number }[]> {
+    try {
+      // Try dedicated time series endpoint first
+      const response = await this.client.get('/metrics/time-series', {
+        params: { period_days: period }
+      });
+      return response.data.data || response.data || [];
+    } catch {
+      // Fallback: fetch recent logs and aggregate by date
+      // Backend max page_size is 100, so we fetch multiple pages if needed
+      try {
+        const dateMap = new Map<string, number>();
+        const cutoffDate = new Date();
+        cutoffDate.setDate(cutoffDate.getDate() - period);
+        
+        // Fetch up to 5 pages (500 logs total)
+        let page = 1;
+        let hasMore = true;
+        
+        while (hasMore && page <= 5) {
+          const logsResponse = await this.getLogs({ page, page_size: 100 });
+          const logs = logsResponse.items;
+          
+          logs.forEach(log => {
+            const logDate = new Date(log.executed_at || log.created_at);
+            if (logDate >= cutoffDate) {
+              const dateKey = logDate.toISOString().split('T')[0];
+              dateMap.set(dateKey, (dateMap.get(dateKey) || 0) + 1);
+            }
+          });
+          
+          // Check if there are more pages
+          hasMore = page < logsResponse.pages;
+          page++;
+        }
+        
+        // Convert to array and sort by date
+        const result = Array.from(dateMap.entries())
+          .map(([date, count]) => ({ date, count }))
+          .sort((a, b) => a.date.localeCompare(b.date));
+        
+        return result;
+      } catch {
+        return [];
+      }
+    }
   }
 
   /**
