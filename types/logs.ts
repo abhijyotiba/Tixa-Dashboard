@@ -27,12 +27,56 @@ export interface LogMetrics {
 }
 
 export interface LogDetail extends WorkflowLog {
-  trace?: {
-    timeline?: TimelineNode[];
-    react?: ReActIteration[];
-    retrieval?: RetrievalData;
-    output?: FinalOutput;
+  trace?: TraceData;
+}
+
+// Trace data can have nested structure from backend
+export interface TraceData {
+  // Nested trace (backend sometimes wraps payload in trace.trace)
+  trace?: TraceData;
+  // Legacy timeline format
+  timeline?: TimelineNode[];
+  react?: ReActIteration[];
+  retrieval?: RetrievalData;
+  output?: FinalOutput;
+  // New audit events format
+  audit_events?: AuditEvent[];
+  react_iterations?: ReActIteration[];
+  product?: ProductInfo;
+  planning?: PlanningInfo;
+  private_note?: string;
+  final_response?: string;
+  // Allow additional fields
+  [key: string]: any;
+}
+
+export interface AuditEvent {
+  event: string;
+  type: string;
+  timestamp?: string;
+  details?: {
+    category?: string;
+    confidence?: number;
+    iterations?: number;
+    duration_seconds?: number;
+    resolution_status?: string;
+    tags?: string[];
+    [key: string]: any;
   };
+}
+
+export interface ProductInfo {
+  identified?: {
+    name: string;
+    model: string;
+    category?: string;
+  };
+  confidence?: number;
+}
+
+export interface PlanningInfo {
+  execution_plan?: string;
+  steps?: string[];
 }
 
 export interface TimelineNode {

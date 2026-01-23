@@ -109,7 +109,7 @@ export default function TraceTimeline({ trace }: TraceTimelineProps) {
       <div className="space-y-6">
         
         {/* Product Identification (if available) */}
-        {hasProduct && (
+        {hasProduct && actualTrace.product?.identified && (
           <div className="relative flex items-start">
             <div className="absolute left-0 w-10 h-10 rounded-full border-2 border-white bg-emerald-100 text-emerald-600 shadow-sm flex items-center justify-center z-10">
               <Search className="h-5 w-5" />
@@ -122,11 +122,13 @@ export default function TraceTimeline({ trace }: TraceTimelineProps) {
                 {actualTrace.product.identified.category && (
                   <p className="text-xs text-emerald-600 mt-1">{actualTrace.product.identified.category}</p>
                 )}
-                <div className="mt-2 flex items-center gap-2">
-                  <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">
-                    Confidence: {actualTrace.product.confidence <= 1 ? (actualTrace.product.confidence * 100).toFixed(0) : actualTrace.product.confidence.toFixed(0)}%
-                  </span>
-                </div>
+                {actualTrace.product.confidence !== undefined && (
+                  <div className="mt-2 flex items-center gap-2">
+                    <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">
+                      Confidence: {actualTrace.product.confidence <= 1 ? (actualTrace.product.confidence * 100).toFixed(0) : actualTrace.product.confidence.toFixed(0)}%
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
