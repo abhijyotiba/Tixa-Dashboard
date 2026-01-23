@@ -38,7 +38,20 @@ async function handleProxy(req: NextRequest, { params }: { params: { path: strin
     // 4. Handle Response
     if (!res.ok) {
       const errorText = await res.text();
-      return NextResponse.json({ error: errorText }, { status: res.status });
+      console.error('Backend error:', {
+        status: res.status,
+        path: destinationUrl,
+        error: errorText
+      });
+      
+      return NextResponse.json(
+        { 
+          error: errorText || 'Backend request failed',
+          status: res.status,
+          path: pathStr 
+        }, 
+        { status: res.status }
+      );
     }
 
     // Handle 204 No Content responses (e.g., DELETE operations)

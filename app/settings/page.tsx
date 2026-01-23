@@ -154,6 +154,12 @@ export default function SettingsPage() {
                         {copied ? <Check size={18} /> : <Copy size={18} />}
                       </button>
                     </div>
+                    <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded flex items-center gap-2">
+                      <AlertCircle className="text-yellow-600 flex-shrink-0" size={16} />
+                      <p className="text-xs text-yellow-800">
+                        This key will never be shown again. Save it securely before closing.
+                      </p>
+                    </div>
                     <button
                       onClick={() => setNewKey(null)}
                       className="mt-3 text-sm text-green-700 hover:text-green-900 font-medium"
