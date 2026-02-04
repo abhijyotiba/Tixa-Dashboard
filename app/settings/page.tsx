@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
-import { Plus, Trash2, Copy, Check, Key, AlertCircle } from 'lucide-react';
+import { Plus, Trash2, Copy, Check, Key, AlertCircle, Monitor, Loader2, ExternalLink } from 'lucide-react';
+import { getAgentConsoleUrl, setAgentConsoleUrl } from '@/services/userSettings';
 
 interface ApiKey {
   id: string;
@@ -21,11 +22,55 @@ export default function SettingsPage() {
   const [keyName, setKeyName] = useState('');
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Agent Console URL state
+  const [agentConsoleUrl, setAgentConsoleUrlState] = useState('');
+  const [agentConsoleLoading, setAgentConsoleLoading] = useState(true);
+  const [agentConsoleSaving, setAgentConsoleSaving] = useState(false);
+  const [agentConsoleSuccess, setAgentConsoleSuccess] = useState(false);
+  const [agentConsoleError, setAgentConsoleError] = useState<string | null>(null);
 
   // 1. Fetch Keys on Load
   useEffect(() => {
     fetchKeys();
+    fetchAgentConsoleUrl();
   }, []);
+
+  // Fetch Agent Console URL
+  async function fetchAgentConsoleUrl() {
+    try {
+      setAgentConsoleLoading(true);
+      const url = await getAgentConsoleUrl();
+      setAgentConsoleUrlState(url || '');
+    } catch (err) {
+      console.error('Failed to fetch agent console URL:', err);
+    } finally {
+      setAgentConsoleLoading(false);
+    }
+  }
+
+  // Save Agent Console URL
+  async function handleSaveAgentConsoleUrl(e: React.FormEvent) {
+    e.preventDefault();
+    setAgentConsoleSaving(true);
+    setAgentConsoleError(null);
+    setAgentConsoleSuccess(false);
+
+    try {
+      const result = await setAgentConsoleUrl(agentConsoleUrl.trim());
+      if (result.success) {
+        setAgentConsoleSuccess(true);
+        setTimeout(() => setAgentConsoleSuccess(false), 3000);
+      } else {
+        setAgentConsoleError(result.error || 'Failed to save URL');
+      }
+    } catch (err) {
+      console.error('Failed to save agent console URL:', err);
+      setAgentConsoleError('Failed to save URL');
+    } finally {
+      setAgentConsoleSaving(false);
+    }
+  }
 
   async function fetchKeys() {
     try {
@@ -111,6 +156,94 @@ export default function SettingsPage() {
         <main className="flex-1 overflow-y-auto p-6">
           <div className="max-w-4xl mx-auto space-y-8">
             
+            {/* Agent Console URL Section */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-purple-100 rounded-lg">
+                  <Monitor className="text-purple-600" size={20} />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">Agent Console</h2>
+                  <p className="text-sm text-gray-600">Configure your Flusso Agent Console URL to access the chatbot</p>
+                </div>
+              </div>
+              
+              {agentConsoleLoading ? (
+                <div className="flex items-center gap-2 text-gray-500 py-4">
+                  <Loader2 className="animate-spin" size={18} />
+                  <span className="text-sm">Loading settings...</span>
+                </div>
+              ) : (
+                <form onSubmit={handleSaveAgentConsoleUrl} className="space-y-4">
+                  <div>
+                    <label htmlFor="agentConsoleUrl" className="block text-sm font-medium text-gray-700 mb-1">
+                      Agent Console URL
+                    </label>
+                    <input
+                      id="agentConsoleUrl"
+                      type="url"
+                      placeholder="https://your-agent-console.run.app"
+                      value={agentConsoleUrl}
+                      onChange={(e) => setAgentConsoleUrlState(e.target.value)}
+                      className="w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2.5 border"
+                    />
+                    <p className="mt-1 text-xs text-gray-500">
+                      Enter the URL of your Flusso Agent Console deployed on Google Cloud Run
+                    </p>
+                  </div>
+                  
+                  {agentConsoleError && (
+                    <div className="flex items-center gap-2 text-red-600 text-sm">
+                      <AlertCircle size={16} />
+                      {agentConsoleError}
+                    </div>
+                  )}
+                  
+                  {agentConsoleSuccess && (
+                    <div className="flex items-center gap-2 text-green-600 text-sm">
+                      <Check size={16} />
+                      Agent Console URL saved successfully!
+                    </div>
+                  )}
+                  
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="submit"
+                      disabled={agentConsoleSaving}
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      {agentConsoleSaving ? (
+                        <>
+                          <Loader2 className="animate-spin mr-2" size={16} />
+                          Saving...
+                        </>
+                      ) : (
+                        'Save URL'
+                      )}
+                    </button>
+                    
+                    {agentConsoleUrl && (
+                      <a
+                        href="/chat"
+                        className="inline-flex items-center px-4 py-2 border border-purple-300 text-sm font-medium rounded-md text-purple-700 bg-purple-50 hover:bg-purple-100 transition-colors"
+                      >
+                        <ExternalLink className="mr-2" size={16} />
+                        Open Chat
+                      </a>
+                    )}
+                  </div>
+                </form>
+              )}
+              
+              {!agentConsoleLoading && !agentConsoleUrl && (
+                <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                  <p className="text-sm text-amber-800">
+                    <strong>Need help?</strong> Contact Tixa Support to get your Agent Console URL configured.
+                  </p>
+                </div>
+              )}
+            </div>
+
             {/* Error Alert */}
             {error && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4">

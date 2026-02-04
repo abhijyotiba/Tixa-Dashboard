@@ -7,11 +7,13 @@ import {
   FileText, 
   Settings, 
   CreditCard, 
-  User 
+  User,
+  MessageSquare
 } from 'lucide-react';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Chat', href: '/chat', icon: MessageSquare },
   { name: 'Logs', href: '/logs', icon: FileText },
   { name: 'Settings', href: '/settings', icon: Settings },
   { name: 'Billing', href: '/billing', icon: CreditCard },
