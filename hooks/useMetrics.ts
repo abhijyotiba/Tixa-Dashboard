@@ -3,6 +3,10 @@
 import { useState, useEffect } from 'react';
 import { loggerApi } from '@/services/loggerApi';
 import { MetricsOverview, CategoryMetrics } from '@/types/logs';
+import { getCached, setCache, createCacheKey } from '@/lib/cache';
+
+// Cache TTL: 60 seconds for metrics (they change less frequently)
+const METRICS_CACHE_TTL = 60 * 1000;
 
 export function useMetrics(period: number = 7) {
   const [data, setData] = useState<MetricsOverview | null>(null);
@@ -11,9 +15,18 @@ export function useMetrics(period: number = 7) {
 
   useEffect(() => {
     let isMounted = true;
+    const cacheKey = createCacheKey('metrics', { period });
 
     async function fetchMetrics() {
       try {
+        // Check cache first
+        const cached = getCached<MetricsOverview>(cacheKey, METRICS_CACHE_TTL);
+        if (cached) {
+          setData(cached);
+          setLoading(false);
+          return;
+        }
+
         setLoading(true);
         setError(null);
         const result = await loggerApi.getMetricsOverview(period);
@@ -25,6 +38,7 @@ export function useMetrics(period: number = 7) {
         }
         
         if (isMounted) {
+          setCache(cacheKey, result);
           setData(result);
         }
       } catch (err) {

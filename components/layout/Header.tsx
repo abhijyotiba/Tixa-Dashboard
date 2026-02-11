@@ -1,9 +1,9 @@
 'use client';
 
 import { Bell, Search, LogOut, User } from 'lucide-react';
-import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface HeaderProps {
   title: string;
@@ -12,22 +12,11 @@ interface HeaderProps {
 
 export default function Header({ title, description }: HeaderProps) {
   const router = useRouter();
-  const supabase = createClient();
-  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const { userEmail, signOut } = useAuth();
   const [showMenu, setShowMenu] = useState(false);
 
-  useEffect(() => {
-    async function getUser() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setUserEmail(user.email || null);
-      }
-    }
-    getUser();
-  }, [supabase]);
-
   async function handleLogout() {
-    await supabase.auth.signOut();
+    await signOut();
     router.push('/auth/login');
     router.refresh();
   }

@@ -3,6 +3,10 @@
 import { useState, useEffect } from 'react';
 import { loggerApi } from '@/services/loggerApi';
 import { WorkflowLog, LogsListResponse, LogQueryParams } from '@/types/logs';
+import { getCached, setCache, createCacheKey } from '@/lib/cache';
+
+// Cache TTL: 30 seconds for logs list
+const LOGS_CACHE_TTL = 30 * 1000;
 
 export function useLogs(params: LogQueryParams = {}) {
   const [data, setData] = useState<LogsListResponse | null>(null);
@@ -11,13 +15,23 @@ export function useLogs(params: LogQueryParams = {}) {
 
   useEffect(() => {
     let isMounted = true;
+    const cacheKey = createCacheKey('logs', params);
 
     async function fetchLogs() {
       try {
+        // Check cache first
+        const cached = getCached<LogsListResponse>(cacheKey, LOGS_CACHE_TTL);
+        if (cached) {
+          setData(cached);
+          setLoading(false);
+          return;
+        }
+
         setLoading(true);
         setError(null);
         const result = await loggerApi.getLogs(params);
         if (isMounted) {
+          setCache(cacheKey, result);
           setData(result);
         }
       } catch (err) {

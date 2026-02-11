@@ -10,6 +10,17 @@ import {
   CategoryMetrics,
   LogQueryParams,
 } from '@/types/logs';
+import {
+  Comment,
+  CommentsResponse,
+  CreateCommentData,
+  CreateReplyData,
+  UpdateCommentData,
+  CreateCommentResponse,
+  DeleteCommentResponse,
+  CommentsListResponse,
+  CommentsQueryParams,
+} from '@/types/comments';
 
 class LoggerAPI {
   private client: AxiosInstance;
@@ -154,6 +165,64 @@ class LoggerAPI {
       // Map the backend 'payload' field to the frontend 'trace' field
       trace: logData.payload || {}, 
     };
+  }
+
+  // ==================== COMMENTS API ====================
+
+  /**
+   * Get all comments for a specific log
+   */
+  async getCommentsForLog(logId: string): Promise<CommentsResponse> {
+    const response = await this.client.get(`/logs/${logId}/comments`);
+    return response.data;
+  }
+
+  /**
+   * Create a new comment on a log
+   */
+  async createComment(logId: string, data: CreateCommentData): Promise<CreateCommentResponse> {
+    const response = await this.client.post(`/logs/${logId}/comments`, data);
+    return response.data;
+  }
+
+  /**
+   * Create a reply to an existing comment
+   */
+  async createReply(commentId: string, data: CreateReplyData): Promise<CreateCommentResponse> {
+    const response = await this.client.post(`/comments/${commentId}/replies`, data);
+    return response.data;
+  }
+
+  /**
+   * Get a single comment with its replies
+   */
+  async getComment(commentId: string): Promise<{ data: Comment }> {
+    const response = await this.client.get(`/comments/${commentId}`);
+    return response.data;
+  }
+
+  /**
+   * Update a comment's text and/or status
+   */
+  async updateComment(commentId: string, data: UpdateCommentData): Promise<CreateCommentResponse> {
+    const response = await this.client.put(`/comments/${commentId}`, data);
+    return response.data;
+  }
+
+  /**
+   * Delete a comment and all its replies
+   */
+  async deleteComment(commentId: string): Promise<DeleteCommentResponse> {
+    const response = await this.client.delete(`/comments/${commentId}`);
+    return response.data;
+  }
+
+  /**
+   * Get all comments with optional filters (for dashboard)
+   */
+  async getAllComments(params: CommentsQueryParams = {}): Promise<CommentsListResponse> {
+    const response = await this.client.get('/comments', { params });
+    return response.data;
   }
 }
 
