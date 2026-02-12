@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Header from '@/components/layout/Header';
 import MetricCard from '@/components/analytics/MetricCard';
 import { useMetrics } from '@/hooks/useMetrics';
 import { useLogs } from '@/hooks/useLogs';
 import { DEMO_METRICS, DEMO_BANNER_KEY } from '@/lib/demoData';
+import { DashboardSkeleton, ChartSkeleton } from '@/components/ui/Skeleton';
 import { 
   Activity, 
   CheckCircle2, 
@@ -15,16 +17,19 @@ import {
   X,
   Sparkles
 } from 'lucide-react';
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer,
-  Cell
-} from 'recharts';
+
+// Lazy load the entire chart component - reduces initial bundle by ~80KB
+const TimeSeriesChart = dynamic(
+  () => import('@/components/charts/TimeSeriesChart'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="h-80 flex items-center justify-center">
+        <div className="animate-pulse text-gray-400">Loading chart...</div>
+      </div>
+    )
+  }
+);
 
 // Time range options
 const timeRanges = [
@@ -65,9 +70,7 @@ export default function DashboardPage() {
     return (
       <>
         <Header title="Dashboard" description="Overview of your workflow execution logs" />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-gray-500">Loading...</div>
-        </div>
+        <DashboardSkeleton />
       </>
     );
   }
@@ -176,58 +179,7 @@ export default function DashboardPage() {
           </div>
 
           {(displayMetrics?.time_series?.length ?? 0) > 0 ? (
-            <ResponsiveContainer width="100%" height={320}>
-              <BarChart data={displayMetrics!.time_series} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
-                <XAxis 
-                  dataKey="date" 
-                  tick={{ fontSize: 12, fill: '#6b7280' }}
-                  tickLine={false}
-                  axisLine={{ stroke: '#e5e7eb' }}
-                  tickFormatter={(value) => {
-                    const date = new Date(value);
-                    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                  }}
-                />
-                <YAxis 
-                  tick={{ fontSize: 12, fill: '#6b7280' }}
-                  tickLine={false}
-                  axisLine={false}
-                  allowDecimals={false}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#fff',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-                  }}
-                  labelFormatter={(value) => {
-                    const date = new Date(value);
-                    return date.toLocaleDateString('en-US', { 
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long', 
-                      day: 'numeric' 
-                    });
-                  }}
-                  formatter={(value: number) => [value, 'Tickets']}
-                />
-                <Bar 
-                  dataKey="count" 
-                  radius={[4, 4, 0, 0]}
-                  maxBarSize={50}
-                >
-                  {displayMetrics!.time_series!.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill="#22c55e"
-                      fillOpacity={0.9}
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+            <TimeSeriesChart data={displayMetrics!.time_series!} />
           ) : (
             <div className="h-64 flex items-center justify-center text-gray-500">
               <div className="text-center">

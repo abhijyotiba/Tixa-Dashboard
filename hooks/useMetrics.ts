@@ -1,100 +1,61 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import useSWR from 'swr';
 import { loggerApi } from '@/services/loggerApi';
 import { MetricsOverview, CategoryMetrics } from '@/types/logs';
-import { getCached, setCache, createCacheKey } from '@/lib/cache';
 
-// Cache TTL: 60 seconds for metrics (they change less frequently)
-const METRICS_CACHE_TTL = 60 * 1000;
+/**
+ * Fetch metrics with time series data
+ * SWR handles caching, revalidation, and deduplication automatically
+ */
+async function fetchMetricsWithTimeSeries(period: number): Promise<MetricsOverview> {
+  const result = await loggerApi.getMetricsOverview(period);
+  
+  // If time_series is empty, try to fetch it separately
+  if (!result.time_series || result.time_series.length === 0) {
+    const timeSeries = await loggerApi.getTimeSeries(period);
+    result.time_series = timeSeries;
+  }
+  
+  return result;
+}
 
 export function useMetrics(period: number = 7) {
-  const [data, setData] = useState<MetricsOverview | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    let isMounted = true;
-    const cacheKey = createCacheKey('metrics', { period });
-
-    async function fetchMetrics() {
-      try {
-        // Check cache first
-        const cached = getCached<MetricsOverview>(cacheKey, METRICS_CACHE_TTL);
-        if (cached) {
-          setData(cached);
-          setLoading(false);
-          return;
-        }
-
-        setLoading(true);
-        setError(null);
-        const result = await loggerApi.getMetricsOverview(period);
-        
-        // If time_series is empty, try to fetch it separately
-        if (isMounted && (!result.time_series || result.time_series.length === 0)) {
-          const timeSeries = await loggerApi.getTimeSeries(period);
-          result.time_series = timeSeries;
-        }
-        
-        if (isMounted) {
-          setCache(cacheKey, result);
-          setData(result);
-        }
-      } catch (err) {
-        if (isMounted) {
-          setError(err instanceof Error ? err : new Error('Failed to fetch metrics'));
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
+  const { data, error, isLoading, mutate } = useSWR(
+    ['metrics', period],
+    () => fetchMetricsWithTimeSeries(period),
+    {
+      // Keep data fresh with 60s revalidation
+      refreshInterval: 60000,
+      // Dedupe requests within 60s
+      dedupingInterval: 60000,
+      // Keep showing old data while fetching new
+      keepPreviousData: true,
     }
+  );
 
-    fetchMetrics();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [period]);
-
-  return { data, loading, error };
+  return {
+    data: data ?? null,
+    loading: isLoading,
+    error: error ?? null,
+    refresh: mutate,
+  };
 }
 
 export function useCategoryMetrics() {
-  const [data, setData] = useState<CategoryMetrics[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function fetchMetrics() {
-      try {
-        setLoading(true);
-        setError(null);
-        const result = await loggerApi.getCategoryMetrics();
-        if (isMounted) {
-          setData(result);
-        }
-      } catch (err) {
-        if (isMounted) {
-          setError(err instanceof Error ? err : new Error('Failed to fetch category metrics'));
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
+  const { data, error, isLoading, mutate } = useSWR(
+    'categoryMetrics',
+    () => loggerApi.getCategoryMetrics(),
+    {
+      refreshInterval: 60000,
+      dedupingInterval: 60000,
     }
+  );
 
-    fetchMetrics();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  return { data, loading, error };
+  return {
+    data: data ?? null,
+    loading: isLoading,
+    error: error ?? null,
+    refresh: mutate,
+  };
 }
