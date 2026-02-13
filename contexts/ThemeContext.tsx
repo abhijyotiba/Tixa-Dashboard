@@ -15,7 +15,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 const THEME_STORAGE_KEY = 'tixa-theme';
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('system');
+  const [theme, setThemeState] = useState<Theme>('light');
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
   const [mounted, setMounted] = useState(false);
 
@@ -47,7 +47,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   // Initialize on mount
   useEffect(() => {
     const stored = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
-    const initialTheme = stored || 'system';
+    const initialTheme = stored || 'light';
     setThemeState(initialTheme);
     applyTheme(initialTheme);
     setMounted(true);
