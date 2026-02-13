@@ -79,8 +79,8 @@ export default function TraceTimeline({ trace }: TraceTimelineProps) {
     
     if (payloadKeys.length === 0) {
       return (
-        <div className="text-center text-gray-500 py-8">
-          <FileJson className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+        <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+          <FileJson className="h-8 w-8 mx-auto mb-2 text-gray-400 dark:text-gray-500" />
           <p>Payload is empty</p>
         </div>
       );
@@ -88,12 +88,12 @@ export default function TraceTimeline({ trace }: TraceTimelineProps) {
 
     return (
       <div className="py-4">
-        <div className="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-lg mb-4">
-          <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+        <div className="flex items-start gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg mb-4">
+          <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
           <div className="text-sm">
-            <p className="text-amber-800 font-medium">Timeline structure not detected</p>
-            <p className="text-amber-700 mt-1">
-              Available fields: {payloadKeys.map(k => <code key={k} className="bg-amber-100 px-1 rounded mx-0.5">{k}</code>)}
+            <p className="text-amber-800 dark:text-amber-300 font-medium">Timeline structure not detected</p>
+            <p className="text-amber-700 dark:text-amber-400 mt-1">
+              Available fields: {payloadKeys.map(k => <code key={k} className="bg-amber-100 dark:bg-amber-800 px-1 rounded mx-0.5">{k}</code>)}
             </p>
           </div>
         </div>
@@ -104,27 +104,27 @@ export default function TraceTimeline({ trace }: TraceTimelineProps) {
   return (
     <div className="relative">
       {/* Vertical line */}
-      <div className="absolute left-5 top-0 bottom-0 w-px bg-gray-200" />
+      <div className="absolute left-5 top-0 bottom-0 w-px bg-gray-200 dark:bg-gray-600" />
 
       <div className="space-y-6">
         
         {/* Product Identification (if available) */}
         {hasProduct && actualTrace.product?.identified && (
           <div className="relative flex items-start">
-            <div className="absolute left-0 w-10 h-10 rounded-full border-2 border-white bg-emerald-100 text-emerald-600 shadow-sm flex items-center justify-center z-10">
+            <div className="absolute left-0 w-10 h-10 rounded-full border-2 border-white dark:border-gray-800 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 shadow-sm flex items-center justify-center z-10">
               <Search className="h-5 w-5" />
             </div>
             <div className="ml-14 pt-1">
-              <h4 className="text-sm font-semibold text-gray-900">Product Identified</h4>
-              <div className="mt-2 p-3 bg-emerald-50 rounded-md border border-emerald-100">
-                <p className="text-sm font-medium text-emerald-900">{actualTrace.product.identified.name}</p>
-                <p className="text-xs text-emerald-700 mt-1">Model: {actualTrace.product.identified.model}</p>
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-white">Product Identified</h4>
+              <div className="mt-2 p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-md border border-emerald-100 dark:border-emerald-800">
+                <p className="text-sm font-medium text-emerald-900 dark:text-emerald-300">{actualTrace.product.identified.name}</p>
+                <p className="text-xs text-emerald-700 dark:text-emerald-400 mt-1">Model: {actualTrace.product.identified.model}</p>
                 {actualTrace.product.identified.category && (
-                  <p className="text-xs text-emerald-600 mt-1">{actualTrace.product.identified.category}</p>
+                  <p className="text-xs text-emerald-600 dark:text-emerald-500 mt-1">{actualTrace.product.identified.category}</p>
                 )}
                 {actualTrace.product.confidence !== undefined && (
                   <div className="mt-2 flex items-center gap-2">
-                    <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">
+                    <span className="text-xs bg-emerald-100 dark:bg-emerald-800 text-emerald-800 dark:text-emerald-300 px-2 py-0.5 rounded">
                       Confidence: {actualTrace.product.confidence <= 1 ? (actualTrace.product.confidence * 100).toFixed(0) : actualTrace.product.confidence.toFixed(0)}%
                     </span>
                   </div>
@@ -139,12 +139,12 @@ export default function TraceTimeline({ trace }: TraceTimelineProps) {
           const style = getEventStyle(event.type, event.event);
           return (
             <div key={`audit-${index}`} className="relative flex items-start">
-              <div className={`absolute left-0 w-10 h-10 rounded-full border-2 border-white shadow-sm flex items-center justify-center z-10 ${style.bg} ${style.text}`}>
+              <div className={`absolute left-0 w-10 h-10 rounded-full border-2 border-white dark:border-gray-800 shadow-sm flex items-center justify-center z-10 ${style.bg} ${style.text}`}>
                 {style.icon}
               </div>
               <div className="ml-14 pt-1 w-full">
                 <div className="flex items-center gap-2">
-                  <h4 className="text-sm font-semibold text-gray-900">
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
                     {formatEventName(event.event)}
                   </h4>
                   <span className={`text-xs px-2 py-0.5 rounded ${style.bg} ${style.text}`}>
@@ -153,30 +153,30 @@ export default function TraceTimeline({ trace }: TraceTimelineProps) {
                 </div>
                 
                 {event.details && (
-                  <div className="mt-2 p-3 bg-gray-50 rounded-md border border-gray-100 text-xs">
+                  <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-md border border-gray-100 dark:border-gray-600 text-xs">
                     {/* Show key details based on event type */}
                     {event.details.category && (
-                      <p><span className="font-medium">Category:</span> {event.details.category}</p>
+                      <p className="text-gray-700 dark:text-gray-300"><span className="font-medium">Category:</span> {event.details.category}</p>
                     )}
                     {event.details.confidence !== undefined && (
-                      <p><span className="font-medium">Confidence:</span> {event.details.confidence <= 1 ? (event.details.confidence * 100).toFixed(0) : event.details.confidence.toFixed(0)}%</p>
+                      <p className="text-gray-700 dark:text-gray-300"><span className="font-medium">Confidence:</span> {event.details.confidence <= 1 ? (event.details.confidence * 100).toFixed(0) : event.details.confidence.toFixed(0)}%</p>
                     )}
                     {event.details.iterations !== undefined && (
-                      <p><span className="font-medium">Iterations:</span> {event.details.iterations}</p>
+                      <p className="text-gray-700 dark:text-gray-300"><span className="font-medium">Iterations:</span> {event.details.iterations}</p>
                     )}
                     {event.details.duration_seconds !== undefined && (
-                      <p className="flex items-center gap-1">
+                      <p className="flex items-center gap-1 text-gray-700 dark:text-gray-300">
                         <Clock className="h-3 w-3" />
                         <span>{event.details.duration_seconds.toFixed(2)}s</span>
                       </p>
                     )}
                     {event.details.resolution_status && (
-                      <p><span className="font-medium">Resolution:</span> {event.details.resolution_status}</p>
+                      <p className="text-gray-700 dark:text-gray-300"><span className="font-medium">Resolution:</span> {event.details.resolution_status}</p>
                     )}
                     {event.details.tags && event.details.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-1">
                         {event.details.tags.map((tag: string) => (
-                          <span key={tag} className="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-xs">
+                          <span key={tag} className="bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-gray-200 px-1.5 py-0.5 rounded text-xs">
                             {tag}
                           </span>
                         ))}
@@ -211,18 +211,18 @@ export default function TraceTimeline({ trace }: TraceTimelineProps) {
               
               <div className="mt-2 space-y-3">
                 {/* Thought */}
-                <div className="bg-gray-50 p-3 rounded-md border border-gray-100">
-                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">Thought</span>
-                  <p className="text-sm text-gray-700 mt-1 line-clamp-3">{iter.thought || 'No thought recorded'}</p>
+                <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-md border border-gray-100 dark:border-gray-600">
+                  <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Thought</span>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 mt-1 line-clamp-3">{iter.thought || 'No thought recorded'}</p>
                 </div>
                 
                 {/* Action */}
-                <div className="bg-blue-50 p-3 rounded-md border border-blue-100">
-                  <span className="text-xs font-bold text-blue-600 uppercase tracking-wide">Action</span>
-                  <p className="text-sm text-gray-800 mt-1 font-mono">
+                <div className="bg-blue-50 dark:bg-gray-800 p-3 rounded-md border border-blue-100 dark:border-blue-800">
+                  <span className="text-xs font-bold text-blue-600 dark:text-white uppercase tracking-wide">Action</span>
+                  <p className="text-sm text-gray-800 dark:text-gray-200 mt-1 font-mono">
                     {iter.action}
                     {iter.action_input && (
-                      <span className="block mt-1 text-xs text-blue-700 font-normal">
+                      <span className="block mt-1 text-xs text-blue-700 dark:text-white font-normal">
                         Input: {typeof iter.action_input === 'string' 
                           ? iter.action_input 
                           : JSON.stringify(iter.action_input, null, 2).slice(0, 100) + '...'}
@@ -233,9 +233,9 @@ export default function TraceTimeline({ trace }: TraceTimelineProps) {
 
                 {/* Observation */}
                 {iter.observation && (
-                  <div className="bg-green-50 p-3 rounded-md border border-green-100">
-                    <span className="text-xs font-bold text-green-600 uppercase tracking-wide">Observation</span>
-                    <p className="text-xs text-gray-700 mt-1 line-clamp-2">
+                  <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-md border border-green-100 dark:border-green-800">
+                    <span className="text-xs font-bold text-green-600 dark:text-green-400 uppercase tracking-wide">Observation</span>
+                    <p className="text-xs text-gray-700 dark:text-gray-300 mt-1 line-clamp-2">
                       {iter.observation}
                     </p>
                   </div>
@@ -249,8 +249,8 @@ export default function TraceTimeline({ trace }: TraceTimelineProps) {
         {legacyTimeline.map((node: any, index: number) => (
           <div key={`node-${index}`} className="relative flex items-start group">
             <div className={`
-              absolute left-0 w-10 h-10 rounded-full border-2 border-white shadow-sm flex items-center justify-center z-10
-              ${node.status === 'success' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}
+              absolute left-0 w-10 h-10 rounded-full border-2 border-white dark:border-gray-800 shadow-sm flex items-center justify-center z-10
+              ${node.status === 'success' ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'}
             `}>
               {node.status === 'success' ? (
                 <CheckCircle2 className="h-5 w-5" />
@@ -260,14 +260,14 @@ export default function TraceTimeline({ trace }: TraceTimelineProps) {
             </div>
             
             <div className="ml-14 pt-1">
-              <h4 className="text-sm font-semibold text-gray-900">
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
                 {node.node_name || 'Unknown Step'}
               </h4>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 Duration: {typeof node.duration_seconds === 'number' ? node.duration_seconds.toFixed(3) : '0.000'}s
               </p>
               {node.error && (
-                <div className="mt-2 p-2 bg-red-50 text-red-700 text-xs rounded border border-red-100">
+                <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 text-xs rounded border border-red-100 dark:border-red-800">
                   {node.error}
                 </div>
               )}
@@ -278,20 +278,20 @@ export default function TraceTimeline({ trace }: TraceTimelineProps) {
         {/* Final Output (legacy format) */}
         {legacyOutput && (
           <div className="relative flex items-start">
-            <div className="absolute left-0 w-10 h-10 rounded-full border-2 border-white bg-purple-100 text-purple-600 shadow-sm flex items-center justify-center z-10">
+            <div className="absolute left-0 w-10 h-10 rounded-full border-2 border-white dark:border-gray-800 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 shadow-sm flex items-center justify-center z-10">
               <MessageSquare className="h-5 w-5" />
             </div>
             
             <div className="ml-14 pt-1">
-              <h4 className="text-sm font-semibold text-gray-900">Final Resolution</h4>
-              <div className="mt-2 p-3 bg-purple-50 rounded-md border border-purple-100">
-                <p className="text-sm text-gray-800">
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-white">Final Resolution</h4>
+              <div className="mt-2 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-md border border-purple-100 dark:border-purple-800">
+                <p className="text-sm text-gray-800 dark:text-gray-200">
                   {legacyOutput.response || 'No response text available'}
                 </p>
                 {legacyOutput.tags && legacyOutput.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
                     {legacyOutput.tags.map((tag: string) => (
-                      <span key={tag} className="px-2 py-1 text-xs bg-white text-purple-700 rounded border border-purple-200">
+                      <span key={tag} className="px-2 py-1 text-xs bg-white dark:bg-gray-900 text-purple-700 dark:text-purple-300 rounded border border-purple-200 dark:border-purple-700">
                         {tag}
                       </span>
                     ))}

@@ -80,24 +80,24 @@ export default function LogsPage() {
         description="View and search execution logs"
       />
 
-      <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
+      <main className="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-black">
         {/* Demo Banner */}
         {showDemoBanner && (
-          <div className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 flex items-center justify-between">
+          <div className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Sparkles className="h-5 w-5 text-blue-600" />
+              <Sparkles className="h-5 w-5 text-blue-600 dark:text-white" />
               <div>
-                <p className="text-sm font-medium text-blue-900">
+                <p className="text-sm font-medium text-blue-900 dark:text-gray-200">
                   You're viewing sample logs
                 </p>
-                <p className="text-xs text-blue-700">
+                <p className="text-xs text-blue-700 dark:text-white">
                   Connect your workflow to see real execution logs
                 </p>
               </div>
             </div>
             <button
               onClick={dismissBanner}
-              className="p-1 hover:bg-blue-100 rounded-full transition-colors"
+              className="p-1 hover:bg-blue-100 dark:hover:bg-blue-800 rounded-full transition-colors"
             >
               <X className="h-4 w-4 text-blue-600" />
             </button>
@@ -105,10 +105,10 @@ export default function LogsPage() {
         )}
 
         {/* Filters */}
-        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-4 mb-6">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Search by Ticket ID
               </label>
               <div className="relative">
@@ -121,13 +121,13 @@ export default function LogsPage() {
                     setPage(1);
                   }}
                   placeholder="Enter ticket ID..."
-                  className="w-full rounded-md border border-gray-300 pl-9 pr-3 py-2 text-sm focus:border-primary focus:outline-none"
+                  className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white pl-9 pr-3 py-2 text-sm focus:border-primary focus:outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Status
               </label>
               <select
@@ -136,7 +136,7 @@ export default function LogsPage() {
                   setFilters({ ...filters, status: e.target.value });
                   setPage(1);
                 }}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 text-sm focus:border-primary focus:outline-none"
               >
                 <option value="">All</option>
                 <option value="SUCCESS">Success</option>
@@ -147,7 +147,7 @@ export default function LogsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Environment
               </label>
               <select
@@ -156,7 +156,7 @@ export default function LogsPage() {
                   setFilters({ ...filters, environment: e.target.value });
                   setPage(1);
                 }}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 text-sm focus:border-primary focus:outline-none"
               >
                 <option value="">All</option>
                 <option value="production">Production</option>
@@ -168,15 +168,15 @@ export default function LogsPage() {
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
           {isLoading && (
-            <div className="p-8 text-center text-gray-500">
+            <div className="p-8 text-center text-gray-500 dark:text-gray-400">
               Loading logs...
             </div>
           )}
 
           {error && !isDemo && (
-            <div className="p-8 text-center text-red-600">
+            <div className="p-8 text-center text-red-600 dark:text-red-400">
               Error loading logs: {error.message}
             </div>
           )}
@@ -184,7 +184,7 @@ export default function LogsPage() {
           {!isLoading && (
             <>
               {displayLogs.length === 0 ? (
-                <div className="p-8 text-center text-gray-500">
+                <div className="p-8 text-center text-gray-500 dark:text-gray-400">
                   No logs found
                 </div>
               ) : (
@@ -193,8 +193,8 @@ export default function LogsPage() {
 
               {/* Pagination */}
               {displayTotal > 0 && (
-                <div className="border-t border-gray-200 px-6 py-4 flex items-center justify-between">
-                  <div className="text-sm text-gray-700">
+                <div className="border-t border-gray-200 dark:border-gray-800 px-6 py-4 flex items-center justify-between">
+                  <div className="text-sm text-gray-700 dark:text-gray-300">
                     Showing <span className="font-medium">{(page - 1) * pageSize + 1}</span> to{' '}
                     <span className="font-medium">
                       {Math.min(page * pageSize, displayTotal)}
@@ -205,17 +205,17 @@ export default function LogsPage() {
                     <button
                       onClick={() => setPage(Math.max(1, page - 1))}
                       disabled={page === 1}
-                      className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-300"
                     >
                       <ChevronLeft className="h-4 w-4" />
                     </button>
-                    <span className="px-3 py-1 text-sm">
+                    <span className="px-3 py-1 text-sm text-gray-700 dark:text-gray-300">
                       Page {page} of {displayPages}
                     </span>
                     <button
                       onClick={() => setPage(Math.min(displayPages, page + 1))}
                       disabled={page === displayPages}
-                      className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 dark:text-gray-300"
                     >
                       <ChevronRight className="h-4 w-4" />
                     </button>

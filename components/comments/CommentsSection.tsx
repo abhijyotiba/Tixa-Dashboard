@@ -51,8 +51,8 @@ export default function CommentsSection({ logId }: CommentsSectionProps) {
 
   if (userLoading) {
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <div className="flex items-center justify-center text-gray-500">
+      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">
+        <div className="flex items-center justify-center text-gray-500 dark:text-gray-400">
           <RefreshCw className="h-5 w-5 animate-spin mr-2" />
           Loading...
         </div>
@@ -62,8 +62,8 @@ export default function CommentsSection({ logId }: CommentsSectionProps) {
 
   if (!currentUser) {
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <div className="flex items-center justify-center text-gray-500">
+      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">
+        <div className="flex items-center justify-center text-gray-500 dark:text-gray-400">
           <AlertCircle className="h-5 w-5 mr-2" />
           Please log in to view and add comments.
         </div>
@@ -72,17 +72,17 @@ export default function CommentsSection({ logId }: CommentsSectionProps) {
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200">
+    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
       {/* Header */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
       >
         <div className="flex items-center gap-2">
-          <MessageCircle className="h-5 w-5 text-gray-600" />
-          <span className="text-lg font-semibold text-gray-900">Comments</span>
+          <MessageCircle className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+          <span className="text-lg font-semibold text-gray-900 dark:text-white">Comments</span>
           {totalCount > 0 && (
-            <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+            <span className="px-2 py-0.5 bg-blue-100 dark:bg-gray-700 text-blue-800 dark:text-gray-200 text-xs font-medium rounded-full">
               {totalCount}
             </span>
           )}
@@ -94,12 +94,12 @@ export default function CommentsSection({ logId }: CommentsSectionProps) {
               e.stopPropagation();
               refresh();
             }}
-            className="p-1 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"
+            className="p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
             title="Refresh comments"
           >
             <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
-          <span className="text-gray-400">
+          <span className="text-gray-400 dark:text-gray-500">
             {isExpanded ? '▼' : '▶'}
           </span>
         </div>
@@ -116,7 +116,7 @@ export default function CommentsSection({ logId }: CommentsSectionProps) {
 
           {/* Error Message */}
           {error && (
-            <div className="flex items-center gap-2 p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+            <div className="flex items-center gap-2 p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded-lg text-sm">
               <AlertCircle className="h-4 w-4" />
               {error}
             </div>
@@ -124,7 +124,7 @@ export default function CommentsSection({ logId }: CommentsSectionProps) {
 
           {/* Loading State */}
           {loading && comments.length === 0 && (
-            <div className="flex items-center justify-center py-8 text-gray-500">
+            <div className="flex items-center justify-center py-8 text-gray-500 dark:text-gray-400">
               <RefreshCw className="h-5 w-5 animate-spin mr-2" />
               Loading comments...
             </div>
@@ -132,8 +132,8 @@ export default function CommentsSection({ logId }: CommentsSectionProps) {
 
           {/* Empty State */}
           {!loading && comments.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              <MessageCircle className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+              <MessageCircle className="h-12 w-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
               <p className="text-sm">No comments yet. Be the first to add one!</p>
             </div>
           )}

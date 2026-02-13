@@ -16,10 +16,10 @@ interface CommentCardProps {
 }
 
 const statusColors: Record<CommentStatus, string> = {
-  open: 'bg-yellow-100 text-yellow-800',
-  pending: 'bg-blue-100 text-blue-800',
-  resolved: 'bg-green-100 text-green-800',
-  closed: 'bg-gray-100 text-gray-800',
+  open: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300',
+  pending: 'bg-blue-100 dark:bg-gray-700 text-blue-800 dark:text-gray-200',
+  resolved: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300',
+  closed: 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300',
 };
 
 export default function CommentCard({
@@ -89,22 +89,22 @@ export default function CommentCard({
   };
 
   return (
-    <div className={`${isReply ? 'ml-6 border-l-2 border-gray-200 pl-4' : ''}`}>
-      <div className="bg-white rounded-lg border border-gray-200 p-4 mb-3">
+    <div className={`${isReply ? 'ml-6 border-l-2 border-gray-200 dark:border-gray-800 pl-4' : ''}`}>
+      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-4 mb-3">
         {/* Header */}
         <div className="flex justify-between items-start mb-2">
           <div className="flex items-center gap-2">
-            <span className={comment.user_type === 'internal' ? 'text-blue-600' : 'text-gray-600'}>
+            <span className={comment.user_type === 'internal' ? 'text-blue-600 dark:text-white' : 'text-gray-600 dark:text-gray-400'}>
               {comment.user_type === 'internal' ? (
                 <UserCog className="h-4 w-4" />
               ) : (
                 <User className="h-4 w-4" />
               )}
             </span>
-            <span className="font-medium text-gray-900">
+            <span className="font-medium text-gray-900 dark:text-white">
               {comment.user_name || comment.user_id}
             </span>
-            <span className="text-xs text-gray-500 capitalize">
+            <span className="text-xs text-gray-500 dark:text-gray-400 capitalize">
               ({comment.user_type})
             </span>
           </div>
@@ -130,7 +130,7 @@ export default function CommentCard({
             <textarea
               value={editText}
               onChange={(e) => setEditText(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               rows={3}
             />
             <div className="flex gap-2 mt-2">
@@ -143,18 +143,18 @@ export default function CommentCard({
               </button>
               <button
                 onClick={handleCancelEdit}
-                className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+                className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
               >
                 Cancel
               </button>
             </div>
           </div>
         ) : (
-          <p className="text-gray-700 text-sm mb-3 whitespace-pre-wrap">{comment.comment_text}</p>
+          <p className="text-gray-700 dark:text-gray-300 text-sm mb-3 whitespace-pre-wrap">{comment.comment_text}</p>
         )}
 
         {/* Footer: timestamp and actions */}
-        <div className="flex items-center justify-between text-xs text-gray-500">
+        <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
           <div className="flex items-center gap-2">
             <span>{format(new Date(comment.created_at), 'MMM dd, yyyy HH:mm')}</span>
             {isEdited && <span className="italic">(edited)</span>}
@@ -165,7 +165,7 @@ export default function CommentCard({
             {!isReply && (
               <button
                 onClick={() => setIsReplying(!isReplying)}
-                className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:text-blue-600 hover:bg-gray-100 rounded"
+                className="flex items-center gap-1 px-2 py-1 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
               >
                 <MessageSquare className="h-3 w-3" />
                 Reply
@@ -176,7 +176,7 @@ export default function CommentCard({
             {isOwner && !isEditing && (
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:text-blue-600 hover:bg-gray-100 rounded"
+                className="flex items-center gap-1 px-2 py-1 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
               >
                 <Pencil className="h-3 w-3" />
                 Edit
@@ -188,7 +188,7 @@ export default function CommentCard({
               <button
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:text-red-600 hover:bg-gray-100 rounded disabled:opacity-50"
+                className="flex items-center gap-1 px-2 py-1 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded disabled:opacity-50"
               >
                 <Trash2 className="h-3 w-3" />
                 {isDeleting ? 'Deleting...' : 'Delete'}
@@ -199,12 +199,12 @@ export default function CommentCard({
 
         {/* Reply form */}
         {isReplying && (
-          <div className="mt-4 pt-4 border-t border-gray-100">
+          <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
             <textarea
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
               placeholder="Write a reply..."
-              className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               rows={2}
             />
             <div className="flex gap-2 mt-2">
@@ -220,7 +220,7 @@ export default function CommentCard({
                   setReplyText('');
                   setIsReplying(false);
                 }}
-                className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+                className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600"
               >
                 Cancel
               </button>

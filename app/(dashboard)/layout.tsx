@@ -3,6 +3,7 @@
 import { ReactNode } from 'react';
 import Sidebar from '@/components/layout/Sidebar';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -10,13 +11,15 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <AuthProvider>
-      <div className="flex h-screen bg-gray-100">
-        <Sidebar />
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {children}
+    <ThemeProvider>
+      <AuthProvider>
+        <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
+          <Sidebar />
+          <div className="flex-1 flex flex-col overflow-hidden">
+            {children}
+          </div>
         </div>
-      </div>
-    </AuthProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

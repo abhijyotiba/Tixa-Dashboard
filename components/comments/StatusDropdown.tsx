@@ -13,10 +13,10 @@ interface StatusDropdownProps {
 const statuses: CommentStatus[] = ['open', 'pending', 'resolved', 'closed'];
 
 const statusConfig: Record<CommentStatus, { label: string; color: string; bgColor: string }> = {
-  open: { label: 'Open', color: 'text-yellow-800', bgColor: 'bg-yellow-100 hover:bg-yellow-200' },
-  pending: { label: 'Pending', color: 'text-blue-800', bgColor: 'bg-blue-100 hover:bg-blue-200' },
-  resolved: { label: 'Resolved', color: 'text-green-800', bgColor: 'bg-green-100 hover:bg-green-200' },
-  closed: { label: 'Closed', color: 'text-gray-800', bgColor: 'bg-gray-100 hover:bg-gray-200' },
+  open: { label: 'Open', color: 'text-yellow-800 dark:text-yellow-300', bgColor: 'bg-yellow-100 dark:bg-yellow-900/30 hover:bg-yellow-200 dark:hover:bg-yellow-900/50' },
+  pending: { label: 'Pending', color: 'text-blue-800 dark:text-gray-200', bgColor: 'bg-blue-100 dark:bg-gray-700 hover:bg-blue-200 dark:hover:bg-blue-900/50' },
+  resolved: { label: 'Resolved', color: 'text-green-800 dark:text-green-300', bgColor: 'bg-green-100 dark:bg-green-900/30 hover:bg-green-200 dark:hover:bg-green-900/50' },
+  closed: { label: 'Closed', color: 'text-gray-800 dark:text-gray-300', bgColor: 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600' },
 };
 
 export default function StatusDropdown({ currentStatus, onChange, disabled = false }: StatusDropdownProps) {
@@ -57,7 +57,7 @@ export default function StatusDropdown({ currentStatus, onChange, disabled = fal
           />
           
           {/* Dropdown menu */}
-          <div className="absolute right-0 top-full mt-1 z-20 bg-white rounded-lg border border-gray-200 shadow-lg py-1 min-w-[120px]">
+          <div className="absolute right-0 top-full mt-1 z-20 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-lg py-1 min-w-[120px]">
             {statuses.map((status) => {
               const config = statusConfig[status];
               const isSelected = status === currentStatus;
@@ -66,13 +66,13 @@ export default function StatusDropdown({ currentStatus, onChange, disabled = fal
                 <button
                   key={status}
                   onClick={() => handleSelect(status)}
-                  className={`w-full text-left px-3 py-2 text-xs hover:bg-gray-50 flex items-center justify-between ${
+                  className={`w-full text-left px-3 py-2 text-xs hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-between ${
                     isSelected ? 'font-medium' : ''
                   }`}
                 >
                   <span className={config.color}>{config.label}</span>
                   {isSelected && (
-                    <span className="text-blue-600">✓</span>
+                    <span className="text-blue-600 dark:text-white">✓</span>
                   )}
                 </button>
               );

@@ -36,18 +36,18 @@ export default function AddCommentForm({ currentUser, onSubmit }: AddCommentForm
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-gray-200 p-4">
+    <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-4">
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Add a comment about this log... (e.g., report an issue, ask a question, or provide feedback)"
-        className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+        className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
         rows={3}
         disabled={loading}
       />
       
       <div className="flex justify-between items-center mt-3">
-        <div className="text-xs text-gray-500">
+        <div className="text-xs text-gray-500 dark:text-gray-400">
           Posting as <span className="font-medium">{currentUser.name}</span>
           <span className="ml-1 capitalize">({currentUser.type})</span>
         </div>

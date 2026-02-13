@@ -46,8 +46,8 @@ export default function ChatPage() {
           title="Chat" 
           description="Flusso Automation Assistant"
         />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-3 text-gray-500">
+        <main className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-black">
+          <div className="flex flex-col items-center gap-3 text-gray-500 dark:text-gray-400">
             <Loader2 className="animate-spin" size={32} />
             <span>Loading chat...</span>
           </div>
@@ -63,17 +63,17 @@ export default function ChatPage() {
           title="Chat" 
           description="Flusso Automation Assistant"
         />
-        <main className="flex-1 flex items-center justify-center p-6 bg-gray-50">
+        <main className="flex-1 flex items-center justify-center p-6 bg-gray-50 dark:bg-black">
           <div className="max-w-md w-full text-center">
-            <div className="mx-auto w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-6">
-              <MessageSquareOff className="text-purple-600" size={32} />
+            <div className="mx-auto w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mb-6">
+              <MessageSquareOff className="text-purple-600 dark:text-purple-400" size={32} />
             </div>
             
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
               Agent Console Not Configured
             </h2>
             
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
               To use the chat feature, you need to configure your Agent Console URL in the settings page.
             </p>
             
@@ -88,22 +88,22 @@ export default function ChatPage() {
               
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200" />
+                  <div className="w-full border-t border-gray-200 dark:border-gray-800" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-gray-50 text-gray-500">or</span>
+                  <span className="px-2 bg-gray-50 dark:bg-black text-gray-500 dark:text-gray-400">or</span>
                 </div>
               </div>
               
               <a
                 href="mailto:support@tixa.io?subject=Agent Console URL Setup"
-                className="inline-flex items-center justify-center w-full px-4 py-3 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                className="inline-flex items-center justify-center w-full px-4 py-3 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               >
                 Contact Tixa Support
               </a>
             </div>
             
-            <p className="mt-6 text-xs text-gray-500">
+            <p className="mt-6 text-xs text-gray-500 dark:text-gray-400">
               Don't have an Agent Console? Contact our team to get started with Flusso Automation.
             </p>
           </div>
@@ -119,10 +119,10 @@ export default function ChatPage() {
         description="Flusso Automation Assistant"
       />
 
-      <main className="flex-1 overflow-hidden relative">
+      <main className="flex-1 overflow-hidden relative bg-gray-50 dark:bg-black">
         {iframeLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-50 z-10">
-            <div className="flex flex-col items-center gap-3 text-gray-500">
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-50 dark:bg-black z-10">
+            <div className="flex flex-col items-center gap-3 text-gray-500 dark:text-gray-400">
               <Loader2 className="animate-spin" size={32} />
               <span>Loading Agent Console...</span>
             </div>
@@ -141,7 +141,7 @@ export default function ChatPage() {
           href={agentConsoleUrl || ''}
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute bottom-4 right-4 inline-flex items-center px-3 py-2 text-xs font-medium rounded-lg text-gray-600 bg-white border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors z-20"
+          className="absolute bottom-4 right-4 inline-flex items-center px-3 py-2 text-xs font-medium rounded-lg text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors z-20"
         >
           <ExternalLink className="mr-1.5" size={14} />
           Open in new tab

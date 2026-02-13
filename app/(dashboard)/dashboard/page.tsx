@@ -80,7 +80,7 @@ export default function DashboardPage() {
       <>
         <Header title="Dashboard" description="Overview of your workflow execution logs" />
         <div className="flex-1 flex items-center justify-center">
-          <div className="text-red-600">Error loading metrics: {error.message}</div>
+          <div className="text-red-600 dark:text-red-400">Error loading metrics: {error.message}</div>
         </div>
       </>
     );
@@ -93,26 +93,26 @@ export default function DashboardPage() {
         description="Overview of your workflow execution logs"
       />
 
-      <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
+      <main className="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-black">
         {/* Demo Banner */}
         {showDemoBanner && (
-          <div className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 flex items-center justify-between">
+          <div className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Sparkles className="h-5 w-5 text-blue-600" />
+              <Sparkles className="h-5 w-5 text-blue-600 dark:text-white" />
               <div>
-                <p className="text-sm font-medium text-blue-900">
+                <p className="text-sm font-medium text-blue-900 dark:text-blue-200">
                   You're viewing sample data
                 </p>
-                <p className="text-xs text-blue-700">
+                <p className="text-xs text-blue-700 dark:text-white">
                   Connect your workflow to see real logs and metrics
                 </p>
               </div>
             </div>
             <button
               onClick={dismissBanner}
-              className="p-1 hover:bg-blue-100 rounded-full transition-colors"
+              className="p-1 hover:bg-blue-100 dark:hover:bg-blue-800 rounded-full transition-colors"
             >
-              <X className="h-4 w-4 text-blue-600" />
+              <X className="h-4 w-4 text-blue-600 dark:text-white" />
             </button>
           </div>
         )}
@@ -147,28 +147,28 @@ export default function DashboardPage() {
         </div>
 
         {/* Time Series Chart */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                 Tickets Processed
               </h3>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                 Daily breakdown of processed tickets
               </p>
             </div>
             
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-gray-400" />
-              <div className="flex bg-gray-100 rounded-lg p-1">
+              <div className="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
                 {timeRanges.map((range) => (
                   <button
                     key={range.value}
                     onClick={() => setSelectedPeriod(range.value)}
                     className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
                       selectedPeriod === range.value
-                        ? 'bg-white text-gray-900 shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                     }`}
                   >
                     {range.label}
@@ -181,9 +181,9 @@ export default function DashboardPage() {
           {(displayMetrics?.time_series?.length ?? 0) > 0 ? (
             <TimeSeriesChart data={displayMetrics!.time_series!} />
           ) : (
-            <div className="h-64 flex items-center justify-center text-gray-500">
+            <div className="h-64 flex items-center justify-center text-gray-500 dark:text-gray-400">
               <div className="text-center">
-                <Activity className="h-12 w-12 mx-auto text-gray-300 mb-2" />
+                <Activity className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-2" />
                 <p>No data available for this period</p>
               </div>
             </div>
@@ -192,16 +192,16 @@ export default function DashboardPage() {
 
         {/* AI Metrics */}
         {typeof avgConfidence === 'number' && (
-          <div className="mt-6 bg-white rounded-lg border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          <div className="mt-6 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               AI Performance
             </h3>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
                   Average Confidence
                 </p>
-                <p className="mt-1 text-2xl font-semibold text-gray-900">
+                <p className="mt-1 text-2xl font-semibold text-gray-900 dark:text-white">
                   {avgConfidence <= 1 ? (avgConfidence * 100).toFixed(1) : avgConfidence.toFixed(1)}%
                 </p>
               </div>
