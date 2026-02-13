@@ -33,6 +33,7 @@ import TraceTimeline from '@/components/logs/TraceTimeline';
 import JsonViewer from '@/components/logs/JsonViewer';
 import { CommentsSection } from '@/components/comments';
 import { useLogDetail } from '@/hooks/useLogs';
+import { isDemoLogId } from '@/lib/demoData';
 
 type TabKey = 'timeline' | 'metrics' | 'retrieval' | 'payload' | 'comments';
 
@@ -477,7 +478,15 @@ export default function LogDetailPage() {
               {/* Comments Tab */}
               {activeTab === 'comments' && (
                 <div>
-                  <CommentsSection logId={log.id} />
+                  {isDemoLogId(log.id) ? (
+                    <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+                      <MessageCircle className="h-10 w-10 mb-3 opacity-40" />
+                      <p className="text-sm font-medium">Comments unavailable for demo logs</p>
+                      <p className="text-xs mt-1 opacity-70">Connect your workflow to enable commenting</p>
+                    </div>
+                  ) : (
+                    <CommentsSection logId={log.id} />
+                  )}
                 </div>
               )}
             </div>

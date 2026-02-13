@@ -2,7 +2,8 @@
 
 import useSWR from 'swr';
 import { loggerApi } from '@/services/loggerApi';
-import { LogsListResponse, LogQueryParams } from '@/types/logs';
+import { LogsListResponse, LogQueryParams, LogDetail } from '@/types/logs';
+import { isDemoLogId, getDemoLogDetail } from '@/lib/demoData';
 
 export function useLogs(params: LogQueryParams = {}) {
   // Create stable cache key from params
@@ -28,9 +29,12 @@ export function useLogs(params: LogQueryParams = {}) {
 }
 
 export function useLogDetail(id: string | null) {
-  const { data, error, isLoading, mutate } = useSWR(
-    // Only fetch if id exists
-    id ? ['logDetail', id] : null,
+  // Check if this is a demo log - if so, return demo data directly
+  const isDemo = id ? isDemoLogId(id) : false;
+  
+  const { data, error, isLoading, mutate } = useSWR<LogDetail | null>(
+    // Only fetch from API if id exists AND it's not a demo log
+    id && !isDemo ? ['logDetail', id] : null,
     () => loggerApi.getLogById(id!),
     {
       // Log details don't change often
@@ -38,6 +42,17 @@ export function useLogDetail(id: string | null) {
       dedupingInterval: 60000,
     }
   );
+
+  // If it's a demo log, return the demo data
+  if (isDemo && id) {
+    const demoData = getDemoLogDetail(id);
+    return {
+      data: demoData,
+      loading: false,
+      error: demoData ? null : new Error('Demo log not found'),
+      refresh: () => Promise.resolve(demoData),
+    };
+  }
 
   return {
     data: data ?? null,
